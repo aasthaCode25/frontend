@@ -10,8 +10,8 @@ import { useEffect } from 'react';
 import { fetchStrapiData } from '../lib/fetchStrapiData';
 function Gallery({pics}) {
   
-   
-
+   console.log("Gallery received pics:", pics);
+console.log(pics?.[0]?.image?.formats?.small?.url);
 
   const options = {
     buttons: {
@@ -116,9 +116,10 @@ function Gallery({pics}) {
 
 export async function getServerSideProps() {
   const pics = await fetchStrapiData("galleries?populate=*");
+  console.log("GALLERY PICS:", JSON.stringify(pics?.slice(0,1), null, 2)); // log first item
   return {
     props: {
-      pics, 
+      pics: pics || [],
     },
   };
 }

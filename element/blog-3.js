@@ -7,8 +7,8 @@ import { UpdateContext } from "../context/updatedata";
 function Blog3({ blogs, totalPages, currentPage, onPageChange }) {
 	const { blogData } = useContext(UpdateContext);
 	
-
-
+const blog = blogs?.[0] || {}; // Safely access the first blog post
+console.log("Blog3 received blogs:", blog);
   return (
     <>
      {/* <!-- Blog --> */}
@@ -23,9 +23,17 @@ function Blog3({ blogs, totalPages, currentPage, onPageChange }) {
 				<div key={blog.documentId} className="col-xl-6 wow fadeInUp" data-wow-duration="2s" data-wow-delay="0.2s">
 				<div className="dlab-blog blog-half m-b30">
 					<div className="dlab-media">
-						 <Link href={`/ourstories/${blog.documentId}`}><a><img src={blog?.image1?.formats?.thumbnail?.url} 
-        alt={blog.title || "Blog post"} style={{height:"200px"}}/></a></Link> 
-					</div>
+  {console.log("img url:", blog?.image1?.formats?.thumbnail?.url)}
+  <Link href={`/ourstories/${blog.documentId}`}>
+    <a>
+      <img 
+  src={blog?.image1?.formats?.medium?.url || blog?.image1?.formats?.small?.url || blog?.image1?.url} 
+  alt={blog.title || "Blog post"} 
+  style={{height:"200px"}}
+/>
+    </a>
+  </Link>
+</div>
 					<div className="dlab-info">
 						<h5 className="dlab-title">
 							<Link href={`/ourstories/${blog.documentId}`}><a>{blog?.titile}</a></Link>

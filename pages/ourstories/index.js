@@ -8,18 +8,20 @@ import { useEffect, useState } from "react";
 import { useContext } from "react";
 import { UpdateContext } from "../../context/updatedata";
 import { fetchStrapiData } from "../../lib/fetchStrapiData";
-function OurStories({blogs}) {
-	const [currentPage, setCurrentPage] = useState(1); // Track the current page
-	const [blogsPerPage] = useState(4);
-	const { blogData, setBlogData } = useContext(UpdateContext);
-	setBlogData(blogs)
+function OurStories({ blogs }) {
+  const [currentPage, setCurrentPage] = useState(1);
+  const [blogsPerPage] = useState(4);
+  const { blogData, setBlogData } = useContext(UpdateContext);
+
+  useEffect(() => {
+    setBlogData(blogs); // ✅ safe to call here
+  }, [blogs]);
 
   const indexOfLastBlog = currentPage * blogsPerPage;
   const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
   const currentBlogs = blogData?.slice(indexOfFirstBlog, indexOfLastBlog) || [];
-
-  // Calculate total pages
   const totalPages = Math.ceil((blogData?.length || 0) / blogsPerPage);
+
 
   // Handle page change
   const handlePageChange = (pageNumber) => {
@@ -59,13 +61,12 @@ function OurStories({blogs}) {
     </>
   )
 }
-
 export async function getServerSideProps() {
-  const blogs = await fetchStrapiData("blogs?populate=*");
+  const blogs = await fetchStrapiData("blogs?populate=*"); // ✅ remove .data
   return {
-	props: {
-	  blogs, 
-	},
+    props: {
+      blogs,
+    },
   };
 }
 export default OurStories;
